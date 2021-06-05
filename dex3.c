@@ -9,6 +9,7 @@ void extract(int i,int *pass)
 }
 
 
+
 int main(void)
 {
      int a[6] = {0};
