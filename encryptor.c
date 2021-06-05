@@ -114,64 +114,62 @@ int main(void)
 
     int cp = 0;
     char *c = input;
-    int random_location[4] = {rand()%10,rand()%10,rand()%10,rand()%10}; //Rastgele yazılacak yer belirleniyor
+    int random_location[6] = {rand()%block,rand()%10,rand()%10,rand()%block,rand()%10,rand()%10}; //Rastgele yazılacak yer belirleniyor
 
-    key[1] = random_location[0];
-    key[2] = random_location[1];
+    key[0] = random_location[0];
+    key[1] = random_location[1];
+    key[2] = random_location[2];
 
     if(block == 1)// tek blok oluştuysa blok başına düşen karakter sayısı bütün karakter sayısına eşit olalı
     {
         random_n = size;
     }
 
-    for(int i=0;i<block;i++)
+    for(int i=0;i<size;i++)
     {
         
-        for(int j=0;j<random_n;j++)
+        
+        random_location[3] = rand()%block;//Gelecek kordinatlar belirleniyor
+        random_location[4] = rand()%10;
+        random_location[5] = rand()%10;
+
+
+            
+        for(int k=0;k<64;k++)
         {
-            
-            random_location[2] = rand()%10;//Gelecek kordinatlar belirleniyor
-            random_location[3] = rand()%10;
-
-            
-            for(int k=0;k<64;k++)
+            if(*c == (example[k].character)) // sözlük karakter eşleşmesi
             {
-                if(*c == (example[k].character)) // sözlük karakter eşleşmesi
-                {
-                    cp = example[k].pass;//karakterin şifresi alınıyor
-                    break;
-                }
+                cp = example[k].pass;//karakterin şifresi alınıyor
+                break;
             }
-            c++; // işaretçi bir sonraki karaktere işaret ediyor
-
-            if(random_n-1 == j)//eğer eşitlerse bir sonraki karakterin, z ekseninde sonraki kordinata yerleştirileceği kesindir
-            {
-                dataset[i][random_location[0]][random_location[1]] = combine(i+1,combine(combine(random_location[2],random_location[3]),cp));
-            }
-            else
-            {
-                dataset[i][random_location[0]][random_location[1]] = combine(i,combine(combine(random_location[2],random_location[3]),cp));
-            }
-            
-            
-            printf("%d,%d,%d\n",i,random_location[0],random_location[1]);
-
-            key[3] = i;
-            key[4] = random_location[0];
-            key[5] = random_location[1];
-
-            random_location[0] = random_location[2];//kordinatlar kaydırılıyor bunlar bir sornaki karakterin yazılacağı konumlar
-            random_location[1] = random_location[3];
-
-            
         }
+        c++; // işaretçi bir sonraki karaktere işaret ediyor
 
-        size-random_n; //Eğer 3 karakter girilir ve her bloğa 2 karakter eklenirse 2. eşleme işleminde 1 karakter kaldığından for döngüsü çalışacak ancak-
-        if(size<random_n)//Hata verecektir kalan eleman sayısı her blokta olacak olan sayıdan küçük olursa son kalan bloğa kalan eleman sayısı kadar yazılır.
-        {
-            random_n = size;
-        }
+        
+        dataset[random_location[0]][random_location[1]][random_location[2]] = combine(random_location[3],combine(combine(random_location[4],random_location[5]),cp));
+        
+
+            
+            
+        printf("%d,%d,%d\n",random_location[0],random_location[1],random_location[2]);
+
+        key[3] = random_location[0];
+        key[4] = random_location[1];
+        key[5] = random_location[2];
+
+        random_location[0] = random_location[3];//kordinatlar kaydırılıyor bunlar bir sornaki karakterin yazılacağı konumlar
+        random_location[1] = random_location[4];
+        random_location[2] = random_location[5];
+
+            
     }
+
+    size-random_n; //Eğer 3 karakter girilir ve her bloğa 2 karakter eklenirse 2. eşleme işleminde 1 karakter kaldığından for döngüsü çalışacak ancak-
+    if(size<random_n)//Hata verecektir kalan eleman sayısı her blokta olacak olan sayıdan küçük olursa son kalan bloğa kalan eleman sayısı kadar yazılır.
+    {
+            random_n = size;
+    }
+    
     
     
     p = &dataset;
