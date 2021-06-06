@@ -57,7 +57,7 @@ int combine(int i,int j)// 2 sayıyı yan yana yazar
 
 int main(void)
 {
-    char input2[20];
+    char input2[100];
     int size = 0;
     dict example[64]; //define öğrenilmeli
     int key[6] = {0};
@@ -76,9 +76,9 @@ int main(void)
 
     printf("metin: ");
     //fscanf(stdin,"%s",input2);
-    fgets(input2,20,stdin);
+    fgets(input2,100,stdin);
 
-    char input[20];
+    char input[100];
 
     for(int i=0;input2[i] != '\n';i++)
     {
