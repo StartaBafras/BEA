@@ -61,6 +61,7 @@ int main(void)
     int size = 0;
     dict example[64]; //define öğrenilmeli
     int key[6] = {0};
+    
     FILE *file = fopen("crp.txt","w");
     
     for(int i=0;i<63;i++)//Yerleştirildi türkçe karakterler eklenmeli
@@ -92,6 +93,13 @@ int main(void)
         size++;
     }
 
+    int old_location[size+1];
+    int *ol = old_location;
+    for(int i=0;i<size+1;i++,ol++)// Kayıtların tutulacağı ve birbiriyle kıyaslanacağı dizi oluşturuldu
+    {
+        *ol = -1;
+    }
+
     int random_n = rand()%size; //random_n 1 eksende kaç harf yazılacağını belirliyor
 
     while(random_n == 0)
@@ -120,6 +128,8 @@ int main(void)
     key[1] = random_location[1];
     key[2] = random_location[2];
 
+    old_location[0] = combine(random_location[0],combine(random_location[1],random_location[2]));
+
     if(block == 1)// tek blok oluştuysa blok başına düşen karakter sayısı bütün karakter sayısına eşit olalı
     {
         random_n = size;
@@ -132,6 +142,21 @@ int main(void)
         random_location[3] = rand()%block;//Gelecek kordinatlar belirleniyor
         random_location[4] = rand()%10;
         random_location[5] = rand()%10;
+
+        for(int j=0;old_location[j] != -1;j++)//Oluşturulan kordinatların eski oluşturulan kordinatlarla çakışıp çakışmadığı kontrol ediliyor
+        {
+            if(old_location[j] == combine(random_location[3],combine(random_location[4],random_location[5])))
+            {
+                random_location[3] = rand()%block;//Çakışma varsa kordinatlar tekrar oluşturuluyor anca tekrar kontrol edilmeleri lazımken edilmiyorlar
+                random_location[4] = rand()%10;
+                random_location[5] = rand()%10;
+            }
+        }
+
+        old_location[i+1] = combine(random_location[3],combine(random_location[4],random_location[5]));// yeni kordinatlar kayıt ediliyor
+
+
+        
 
 
             
