@@ -57,10 +57,11 @@ int combine(int i,int j)// 2 sayıyı yan yana yazar
 
 int main(void)
 {
-    char input2[20];
+    char input2[500];
     int size = 0;
     dict example[64]; //define öğrenilmeli
     int key[6] = {0};
+    
     FILE *file = fopen("crp.txt","w");
     
     for(int i=0;i<63;i++)//Yerleştirildi türkçe karakterler eklenmeli
@@ -74,11 +75,11 @@ int main(void)
 
     srand(time(NULL));
 
-    printf("metin: ");
+    printf("Text: ");
     //fscanf(stdin,"%s",input2);
-    fgets(input2,20,stdin);
+    fgets(input2,500,stdin);
 
-    char input[20];
+    char input[500];
 
     for(int i=0;input2[i] != '\n';i++)
     {
@@ -90,6 +91,13 @@ int main(void)
     for(int i=0;input[i] != '\0';i++) // Girilen metnin karakter sayısı belirleniyor
     {
         size++;
+    }
+
+    int old_location[size+1];
+    int *ol = old_location;
+    for(int i=0;i<size+1;i++,ol++)// Kayıtların tutulacağı ve birbiriyle kıyaslanacağı dizi oluşturuldu
+    {
+        *ol = -1;
     }
 
     int random_n = rand()%size; //random_n 1 eksende kaç harf yazılacağını belirliyor
@@ -114,64 +122,79 @@ int main(void)
 
     int cp = 0;
     char *c = input;
-    int random_location[4] = {rand()%10,rand()%10,rand()%10,rand()%10}; //Rastgele yazılacak yer belirleniyor
+    int random_location[6] = {rand()%block,rand()%10,rand()%10,rand()%block,rand()%10,rand()%10}; //Rastgele yazılacak yer belirleniyor
 
-    key[1] = random_location[0];
-    key[2] = random_location[1];
+    key[0] = random_location[0];
+    key[1] = random_location[1];
+    key[2] = random_location[2];
+
+    old_location[0] = combine(random_location[0],combine(random_location[1],random_location[2]));
 
     if(block == 1)// tek blok oluştuysa blok başına düşen karakter sayısı bütün karakter sayısına eşit olalı
     {
         random_n = size;
     }
 
-    for(int i=0;i<block;i++)
+    for(int i=0;i<size;i++)
     {
         
-        for(int j=0;j<random_n;j++)
+        
+        random_location[3] = rand()%block;//Gelecek kordinatlar belirleniyor
+        random_location[4] = rand()%10;
+        random_location[5] = rand()%10;
+
+        for(int j=0;old_location[j] != -1;j++)//Oluşturulan kordinatların eski oluşturulan kordinatlarla çakışıp çakışmadığı kontrol ediliyor
         {
-            
-            random_location[2] = rand()%10;//Gelecek kordinatlar belirleniyor
-            random_location[3] = rand()%10;
-
-            
-            for(int k=0;k<64;k++)
+            if(old_location[j] == combine(random_location[3],combine(random_location[4],random_location[5])))
             {
-                if(*c == (example[k].character)) // sözlük karakter eşleşmesi
-                {
-                    cp = example[k].pass;//karakterin şifresi alınıyor
-                    break;
-                }
+                random_location[3] = rand()%block;//Çakışma varsa kordinatlar tekrar oluşturuluyor anca tekrar kontrol edilmeleri lazımken edilmiyorlar
+                random_location[4] = rand()%10;
+                random_location[5] = rand()%10;
             }
-            c++; // işaretçi bir sonraki karaktere işaret ediyor
-
-            if(random_n-1 == j)//eğer eşitlerse bir sonraki karakterin, z ekseninde sonraki kordinata yerleştirileceği kesindir
-            {
-                dataset[i][random_location[0]][random_location[1]] = combine(i+1,combine(combine(random_location[2],random_location[3]),cp));
-            }
-            else
-            {
-                dataset[i][random_location[0]][random_location[1]] = combine(i,combine(combine(random_location[2],random_location[3]),cp));
-            }
-            
-            
-            printf("%d,%d,%d\n",i,random_location[0],random_location[1]);
-
-            key[3] = i;
-            key[4] = random_location[0];
-            key[5] = random_location[1];
-
-            random_location[0] = random_location[2];//kordinatlar kaydırılıyor bunlar bir sornaki karakterin yazılacağı konumlar
-            random_location[1] = random_location[3];
-
-            
         }
 
-        size-random_n; //Eğer 3 karakter girilir ve her bloğa 2 karakter eklenirse 2. eşleme işleminde 1 karakter kaldığından for döngüsü çalışacak ancak-
-        if(size<random_n)//Hata verecektir kalan eleman sayısı her blokta olacak olan sayıdan küçük olursa son kalan bloğa kalan eleman sayısı kadar yazılır.
+        old_location[i+1] = combine(random_location[3],combine(random_location[4],random_location[5]));// yeni kordinatlar kayıt ediliyor
+
+
+        
+
+
+            
+        for(int k=0;k<64;k++)
         {
-            random_n = size;
+            if(*c == (example[k].character)) // sözlük karakter eşleşmesi
+            {
+                cp = example[k].pass;//karakterin şifresi alınıyor
+                break;
+            }
         }
+        c++; // işaretçi bir sonraki karaktere işaret ediyor
+
+        
+        dataset[random_location[0]][random_location[1]][random_location[2]] = combine(random_location[3],combine(combine(random_location[4],random_location[5]),cp));
+        
+
+            
+            
+        //printf("%d,%d,%d\n",random_location[0],random_location[1],random_location[2]);
+
+        key[3] = random_location[0];
+        key[4] = random_location[1];
+        key[5] = random_location[2];
+
+        random_location[0] = random_location[3];//kordinatlar kaydırılıyor bunlar bir sornaki karakterin yazılacağı konumlar
+        random_location[1] = random_location[4];
+        random_location[2] = random_location[5];
+
+            
     }
+
+    size-random_n; //Eğer 3 karakter girilir ve her bloğa 2 karakter eklenirse 2. eşleme işleminde 1 karakter kaldığından for döngüsü çalışacak ancak-
+    if(size<random_n)//Hata verecektir kalan eleman sayısı her blokta olacak olan sayıdan küçük olursa son kalan bloğa kalan eleman sayısı kadar yazılır.
+    {
+            random_n = size;
+    }
+    
     
     
     p = &dataset;
@@ -189,9 +212,6 @@ int main(void)
     
     
     
-    
-    
-
 
 
 
@@ -202,13 +222,13 @@ int main(void)
         if(find_size(*p) < 7)// sayılar 6 karakterden oluşmayabilir başlarına 0 yazmak için bu bölüm var
         {
             extract(*p,&smalls);
-            fprintf(file,"%d%d%d%d%d%d\n",smalls[0],smalls[1],smalls[2],smalls[3],smalls[4],smalls[5]);
+            fprintf(file,"%d%d%d%d%d%d",smalls[0],smalls[1],smalls[2],smalls[3],smalls[4],smalls[5]);
             continue;
         }
-        fprintf(file,"%d\n",*p);
+        fprintf(file,"%d",*p);
     }
     
-    printf("\nAnahtar: ");
+    printf("\nKey: ");
 
     for(int i=0;i<6;i++)
     {
