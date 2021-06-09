@@ -27,7 +27,7 @@ int main(void)
 
     if(file == NULL)
     {
-        printf("Dosya bulunamadi");
+        printf("File not found");
         return 1;
     }
     fseek(file, 0, SEEK_END);
@@ -63,7 +63,7 @@ int main(void)
 
     int key;
     int key_array[6];
-    printf("Anahtar giriniz: ");
+    printf("Enter Key: ");
     scanf("%d",&key);
 
     extract(key,&key_array);
@@ -97,7 +97,7 @@ int main(void)
         extract(dataset[en_text[0]][en_text[1]][en_text[2]],&en_text);
         if(en_text[3]*100 + en_text[4]*10 + en_text[5] == 0)
         {
-            printf("\nHatalı işaretçi\n");
+            printf("\nWrong Pointer\n");
             return 3;
         }
 

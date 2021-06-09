@@ -57,7 +57,7 @@ int combine(int i,int j)// 2 sayıyı yan yana yazar
 
 int main(void)
 {
-    char input2[100];
+    char input2[500];
     int size = 0;
     dict example[64]; //define öğrenilmeli
     int key[6] = {0};
@@ -75,11 +75,11 @@ int main(void)
 
     srand(time(NULL));
 
-    printf("metin: ");
+    printf("Text: ");
     //fscanf(stdin,"%s",input2);
-    fgets(input2,100,stdin);
+    fgets(input2,500,stdin);
 
-    char input[100];
+    char input[500];
 
     for(int i=0;input2[i] != '\n';i++)
     {
@@ -228,7 +228,7 @@ int main(void)
         fprintf(file,"%d",*p);
     }
     
-    printf("\nAnahtar: ");
+    printf("\nKey: ");
 
     for(int i=0;i<6;i++)
     {
