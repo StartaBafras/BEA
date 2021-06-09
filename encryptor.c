@@ -176,7 +176,7 @@ int main(void)
 
             
             
-        printf("%d,%d,%d\n",random_location[0],random_location[1],random_location[2]);
+        //printf("%d,%d,%d\n",random_location[0],random_location[1],random_location[2]);
 
         key[3] = random_location[0];
         key[4] = random_location[1];
@@ -212,9 +212,6 @@ int main(void)
     
     
     
-    
-    
-
 
 
 
@@ -225,10 +222,10 @@ int main(void)
         if(find_size(*p) < 7)// sayılar 6 karakterden oluşmayabilir başlarına 0 yazmak için bu bölüm var
         {
             extract(*p,&smalls);
-            fprintf(file,"%d%d%d%d%d%d\n",smalls[0],smalls[1],smalls[2],smalls[3],smalls[4],smalls[5]);
+            fprintf(file,"%d%d%d%d%d%d",smalls[0],smalls[1],smalls[2],smalls[3],smalls[4],smalls[5]);
             continue;
         }
-        fprintf(file,"%d\n",*p);
+        fprintf(file,"%d",*p);
     }
     
     printf("\nAnahtar: ");
